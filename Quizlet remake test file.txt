@@ -1,0 +1,17 @@
+Vocabulary{
+    plenus, plena, plenus:full, filled;
+    dignus, digna, dignum:worthy, deserving;
+    usque:all the way to/from;
+    uterque, utraque, utrumque: each(of two), either;
+    placeo, placére, placui, placitum: to please, be pleasing;
+    seu:or if, or;
+    castra, castrorum, n:camp, military camp;
+    levis, levis, leve:smooth, light, thin;
+    fleo, flére, flevi, fletus:to cry for;
+    mundus, mundi, m:world, heavens, mankind, beauty aids?;
+    paro, parare, paravi, paratus:prepare, to make ready;
+    prior, prior, prius:former, previous, prior;
+}Vocabulary;
+Language{
+    latin:english
+}Language;
