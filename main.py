@@ -79,11 +79,15 @@ class Vocabulary:
                 self.lang = (self.lang + 1) % 2
             self.loc = self.loc % len(self.vocab) + 1
     
-    def start_learn(self):
-        pass
-    
+    def start_learn(self, mc, openr, tf, flashcards):
+        self.input = {'mc':mc, 'openr':openr, 'tf':tf, 'flashcards':flashcards}
+        self.options = [name for name, value in self.input.items() if value]
+        
+        print('Starting learn.')
+        print('Using ' + str(self.options) + '. Press "enter" to enter your answer. Type "stop" to exit learn. Type "switch" to switch languages.')
+        
     def start_test(self):
         pass
 
 vocab = Vocabulary(path)
-vocab.start_flashcards()
+vocab.start_learn(True, False, False, False)
