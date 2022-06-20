@@ -2,8 +2,8 @@ Vocabulary{
     plenus, plena, plenus:full, filled;
     dignus, digna, dignum:worthy, deserving;
     usque:all the way to/from;
-    uterque, utraque, utrumque: each(of two), either;
-    placeo, placére, placui, placitum: to please, be pleasing;
+    uterque, utraque, utrumque:each(of two), either;
+    placeo, placére, placui, placitum:to please, be pleasing;
     seu:or if, or;
     castra, castrorum, n:camp, military camp;
     levis, levis, leve:smooth, light, thin;
