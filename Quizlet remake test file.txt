@@ -1,5 +1,5 @@
 Vocabulary{
-    plenus, plena, plenus:full, filled;
+    plenus, plena, plenum:full, filled;
     dignus, digna, dignum:worthy, deserving;
     usque:all the way to/from;
     uterque, utraque, utrumque:each(of two), either;
