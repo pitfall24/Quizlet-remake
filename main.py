@@ -1,4 +1,7 @@
-path = 'Quizlet remake test file'
+from random import randint
+from time import sleep
+
+path = 'file'
 
 class Vocabulary:
     def __init__(self, path):
@@ -49,8 +52,33 @@ class Vocabulary:
     def print_language(self):
         print('Word:', self.language[0], end = '\t')
         print('Definition:', self.language[1])
+        
+    def start_flashcards(self, lang = None):
+        if not lang:
+            self.lang = None
+        else:
+            self.lang = lang
+        print('Starting flashcards.')
+        while self.lang not in self.language:
+            self.lang = input('Enter which language you would like to start with ' + str(self.language))
+        print('Using', self.lang + '. Press "enter" to flip flashcard and go to the next term. Type "stop" to exit flashcards.')
+        self.response = ''
+        sleep(2)
+        self.loc = 1
+        while self.response != 'stop':
+            print(self.vocab[self.loc][self.language.index(self.lang)])
+            self.response = input()
+            if self.response == '':
+                print(self.vocab[self.loc][(self.language.index(self.lang) + 1) % 2], end = '\n\n')
+            if self.response == 'stop':
+                return
+            self.loc = self.loc % len(self.vocab) + 1
+    
+    def start_learn(self):
+        pass
+    
+    def start_test(self):
+        pass
 
 vocab = Vocabulary(path)
-
-vocab.print_vocab()
-vocab.print_language()
+vocab.start_flashcards()
