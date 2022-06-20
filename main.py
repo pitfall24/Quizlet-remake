@@ -59,19 +59,24 @@ class Vocabulary:
         else:
             self.lang = lang
         print('Starting flashcards.')
-        while self.lang not in self.language:
-            self.lang = input('Enter which language you would like to start with ' + str(self.language))
-        print('Using', self.lang + '. Press "enter" to flip flashcard and go to the next term. Type "stop" to exit flashcards.')
+        while self.lang not in [0, 1]:
+            try:
+                self.lang = int(input('Enter which language you would like to start with ' + str(self.language) + ' (0 or 1)'))
+            except ValueError:
+                continue
+        print('Using', self.language[self.lang] + '. Press "enter" to flip flashcard and go to the next term. Type "stop" to exit flashcards. Type "switch" to switch languages.')
         self.response = ''
-        sleep(2)
         self.loc = 1
         while self.response != 'stop':
-            print(self.vocab[self.loc][self.language.index(self.lang)])
+            sleep(1)
+            print(self.vocab[self.loc][self.lang])
             self.response = input()
             if self.response == '':
-                print(self.vocab[self.loc][(self.language.index(self.lang) + 1) % 2], end = '\n\n')
+                print(self.vocab[self.loc][(self.lang + 1) % 2], end = '\n-------------------------------------------------\n')
             if self.response == 'stop':
                 return
+            if self.response == 'switch':
+                self.lang = (self.lang + 1) % 2
             self.loc = self.loc % len(self.vocab) + 1
     
     def start_learn(self):
