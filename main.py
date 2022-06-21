@@ -124,6 +124,7 @@ class Vocabulary:
                     continue
                 else:
                     print(f'Incorrect. Correct answer was "{self.totest[self.lang]}"')
+                    
             if self.method == 'openr':
                 self.totest = choice(self.vocab)
                 print(f'Open response question. Type the definition of "{self.totest[self.lang]}"')
@@ -143,6 +144,7 @@ class Vocabulary:
                     continue
                 else:
                     print(f'Incorrect. Correct answer was "{self.totest[(self.lang + 1) % 2]}"\n')
+                    
             if self.method == 'tf':
                 self.answer = randint(0, 1)
                 if self.answer:
@@ -153,19 +155,39 @@ class Vocabulary:
                     if self.response == 'stop':
                         return
                     if self.response == 'skip':
-                        print(f'Skipped. Answer was "{self.asnswer}"\n')
+                        print(f'Skipped. Answer was "{self.answer}"\n')
                         continue
                     if self.response == 'switch':
                         self.lang = (self.lang + 1) % 2
-                        print('Skipping doesn\'t do anything to t/f questions but ok.\n')
+                        print('Switching doesn\'t do anything to t/f questions but ok.\n')
                         continue
                     if self.response == str(self.answer):
                         print('Correct.')
+                        continue
                     if self.response != str(self.answer):
                         print(f'Incorrect. Answer was "{self.answer}"')
                 else:
-                    # generate a false correspondence
-                    pass
+                    self.totest = choice(self.vocab)
+                    self.bait = choice(self.vocab)
+                    while self.bait == self.totest:
+                        self.bait = choice(self.vocab)
+                    print(f'True or False question. Is "{self.totest[1]}" the definition of "{self.bait[0]}"? Answer 0 (False) or 1 (True).')
+                    
+                    self.response = input()
+                    if self.response == 'stop':
+                        return
+                    if self.response == 'skip':
+                        print(f'Skipped. Answer was "{self.answer}"\n')
+                        continue
+                    if self.response == 'switch':
+                        self.lang = (self.lang + 1) % 2
+                        print('Switching doesn\'t do anything to t/f questions but ok.\n')
+                        continue
+                    if self.response == str(self.answer):
+                        print('Correct.')
+                        continue
+                    if self.response != str(self.answer):
+                        print(f'Incorrect. Answer was "{self.answer}"')
             
             if self.method == 'flashcards':
                 self.word = choice(self.vocab)
@@ -195,4 +217,4 @@ class Vocabulary:
         pass
 
 vocab = Vocabulary(path)
-vocab.start_learn(False, False, True, False)
+vocab.start_learn(True, True, True, True)
