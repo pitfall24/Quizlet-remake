@@ -94,7 +94,7 @@ class Vocabulary:
                 self.lang = int(input('Enter which language you would like to start with ' + str(self.language) + ' (0 or 1)'))
             except ValueError:
                 continue
-        print('Using ' + str(self.language[self.lang]) + '. Quizzing with ' + str(self.options) + '. Type "skip" to skip a question. Type "stop" to exit learn. Type "switch" to switch languages.')
+        print('Using ' + str(self.language[self.lang]) + '. Learning with ' + str(self.options) + '. Type "skip" to skip a question. Type "stop" to exit learn. Type "switch" to switch languages.')
 
         while True:
             sleep(1)
@@ -213,8 +213,61 @@ class Vocabulary:
                     else:
                         print(f'Word: "{self.word[(self.lang + 1) % 2]}"\n')
 
-    def start_test(self):
-        pass
+    def start_test(self, mc, openr, tf, flashcards, num = None, lang = None):
+        self.input = {'mc':mc, 'openr':openr, 'tf':tf, 'flashcards':flashcards}
+        self.options = [name for name, value in self.input.items() if value]
+        self.response = ''
+        if not lang:
+            self.lang = None
+        else:
+            self.lang = lang
+        print('Starting test.')
+        while self.lang not in [0, 1]:
+            try:
+                self.lang = int(input('Enter which language you would like to start with ' + str(self.language) + ' (0 or 1)'))
+            except ValueError:
+                continue
+        if not num:
+            self.num = ''
+        else:
+            self.num = num
+        while not str(self.num).isdigit() or not self.num:
+            try:
+                self.num = int(input(f'Enter the number of questions you would like to test between.'))
+            except ValueError:
+                continue
+        print('Using ' + str(self.language[self.lang]) + '. Testing with ' + str(self.options) + ' for ' + str(self.num) + ' question(s). Type "skip" to skip a question. Type "stop" to exit the test.')
+        for i in range(self.num):
+            self.method = choice(self.options)
+            self.question_number = i + 1
+            self.wrong = 0
+            self.correct = 0
+            
+            if self.method == 'mc':
+                self.available = choices(self.vocab, k = 4)
+                self.totest = choice(self.available)
+                self.answers = {letter:word for letter, word in zip(['A', 'B', 'C', 'D'], self.available)}
+                print('Multiple choice question: ' + str(self.totest[self.lang]))
+                print('\n'.join(str(letter) + '. ' + str(word[(self.lang + 1) % 2]) for letter, word in self.answers.items()))
+
+                self.response = input()
+                if self.response == 'stop':
+                    print(f'{self.wrong} wrong. {self.correct} correct.')
+                    return
+                if self.response.upper() not in self.answers.keys() and self.response not in ['skip', 'stop', 'switch']:
+                    print('???')
+                    self.wrong += 1
+                    continue
+                if self.response == 'skip':
+                    print('Skipped.\n')
+                    self.wrong += 1
+                    continue
+                if self.answers[self.response.upper()] == self.totest:
+                    print('Correct.\n')
+                    
+                    continue
+                else:
+                    print(f'Incorrect. Correct answer was "{self.totest[self.lang]}"')
 
 vocab = Vocabulary(path)
-vocab.start_learn(True, True, True, True)
+vocab.start_test(True, False, False, False)
