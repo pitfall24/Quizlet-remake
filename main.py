@@ -337,19 +337,24 @@ class Vocabulary:
         print('wrong', self.wrong)
         print('correct', self.correct)
 
-path = input('What is your files name (Without ".txt")')
+path = input('What is your files name (Without ".txt")?  ')
 vocab = Vocabulary(path)
 
 activity = None
+types = [None]
 while activity not in ['flashcards', 'learn', 'test']:
-    activity = input('Would you like to view "flashcards", "learn", or take a "test"?')
+    activity = input('Would you like to view "flashcards", "learn", or take a "test"?  ')
     
 if activity == 'flashcards':
     vocab.start_flashcards()
 
 if activity == 'learn':
-    types = input('Which of the following would you like to learn with? Separate with a comma (no space):\nMultiple choice (mc)\nOpen response (openr)\nTrue/False (tf)\nFlashcards (flashcards)').split(',')
+    while not set(types).issubset(set(['mc', 'openr', 'tf', 'flashcards'])):
+        print(types)
+        types = input('Which of the following would you like to learn with? Separate with a comma (no space):\nMultiple choice (mc)\nOpen response (openr)\nTrue/False (tf)\nFlashcards (flashcards)\n').split(',')
+    vocab.start_learn(mc = 'mc' in types, openr = 'openr' in types, tf = 'tf' in types, flashcards = 'flashcards' in types)
 
 if activity == 'test':
-    # do even more shit
-    pass
+    while not set(types).issubset(set(['mc', 'openr', 'tf'])):
+        types = input('Which of the following would you like to test with? Separate with a comma (no space):\nMultiple choice (mc)\nOpen response (openr)\nTrue/False (tf)\n').split(',')
+    vocab.start_test(mc = 'mc' in types, openr = 'openr' in types, tf = 'tf' in types)
