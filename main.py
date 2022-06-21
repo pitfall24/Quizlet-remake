@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice, choices
 from time import sleep
 
 path = 'file'
@@ -37,7 +37,7 @@ class Vocabulary:
         self.language = self.lines[self.langstartend[0] + 1:self.langstartend[1]][0].strip().split(':')
 
     def get_vocab(self):
-        for i, word in enumerate(self.words, 1):
+        for i, word in enumerate(self.words):
             self.vocab[i] = word.split(':')
 
 
@@ -52,7 +52,7 @@ class Vocabulary:
     def print_language(self):
         print('Word:', self.language[0], end = '\t')
         print('Definition:', self.language[1])
-        
+
     def start_flashcards(self, lang = None):
         if not lang:
             self.lang = None
@@ -66,8 +66,8 @@ class Vocabulary:
                 continue
         print('Using', self.language[self.lang] + '. Press "enter" to flip flashcard and go to the next term. Type "stop" to exit flashcards. Type "switch" to switch languages.')
         self.response = ''
-        self.loc = 1
-        while self.response != 'stop':
+        self.loc = 0
+        while True:
             sleep(1)
             print(self.vocab[self.loc][self.lang])
             self.response = input()
@@ -77,15 +77,50 @@ class Vocabulary:
                 return
             if self.response == 'switch':
                 self.lang = (self.lang + 1) % 2
-            self.loc = self.loc % len(self.vocab) + 1
-    
-    def start_learn(self, mc, openr, tf, flashcards):
+            self.loc = (self.loc + 1) % len(self.vocab)
+
+    def start_learn(self, mc, openr, tf, flashcards, lang = None):
         self.input = {'mc':mc, 'openr':openr, 'tf':tf, 'flashcards':flashcards}
         self.options = [name for name, value in self.input.items() if value]
-        
+        self.response = ''
+
+        if not lang:
+            self.lang = None
+        else:
+            self.lang = lang
         print('Starting learn.')
-        print('Using ' + str(self.options) + '. Press "enter" to enter your answer. Type "stop" to exit learn. Type "switch" to switch languages.')
-        
+        while self.lang not in [0, 1]:
+            try:
+                self.lang = int(input('Enter which language you would like to start with ' + str(self.language) + ' (0 or 1)'))
+            except ValueError:
+                continue
+        print('Using ' + str(self.language[self.lang]) + '. Quizzing with ' + str(self.options) + '. Type "skip" to skip a question. Type "stop" to exit learn. Type "switch" to switch languages.')
+
+        while True:
+            sleep(1)
+            self.method = choice(self.options)
+            if self.method == 'mc':
+                self.available = choices(self.vocab, k = 4)
+                self.totest = choice(self.available)
+                self.answers = {letter:word for letter, word in zip(['A', 'B', 'C', 'D'], self.available)}
+                print('Multiple choice question: ' + str(self.totest[self.lang]))
+                print('\n'.join(str(letter) + '. ' + str(word[(self.lang + 1) % 2]) for letter, word in self.answers.items()))
+
+                self.response = input()
+                if self.response not in self.answers.keys() and self.response not in ['skip', 'stop', 'switch'] or self.response == 'stop':
+                    return
+                if self.response == 'skip':
+                    print(f'Skipped. Answer was "{self.totest[self.lang]}"')
+                    continue
+                if self.response == 'switch':
+                    self.lang = (self.lang + 1) % 2
+                    continue
+                if self.answers[self.response] == self.totest:
+                    print('Correct')
+                    continue
+                else:
+                    print(f'Incorrect. Correct answer was "{self.totest[self.lang]}"')
+
     def start_test(self):
         pass
 
