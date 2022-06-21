@@ -143,9 +143,56 @@ class Vocabulary:
                     continue
                 else:
                     print(f'Incorrect. Correct answer was "{self.totest[(self.lang + 1) % 2]}"\n')
+            if self.method == 'tf':
+                self.answer = randint(0, 1)
+                if self.answer:
+                    self.totest = choice(self.vocab)
+                    print(f'True or False question. Is "{self.totest[1]}" the definition of "{self.totest[0]}"? Answer 0 (False) or 1 (True).')
+                    
+                    self.response = input()
+                    if self.response == 'stop':
+                        return
+                    if self.response == 'skip':
+                        print(f'Skipped. Answer was "{self.asnswer}"\n')
+                        continue
+                    if self.response == 'switch':
+                        self.lang = (self.lang + 1) % 2
+                        print('Skipping doesn\'t do anything to t/f questions but ok.\n')
+                        continue
+                    if self.response == str(self.answer):
+                        print('Correct.')
+                    if self.response != str(self.answer):
+                        print(f'Incorrect. Answer was "{self.answer}"')
+                else:
+                    # generate a false correspondence
+                    pass
+            
+            if self.method == 'flashcards':
+                self.word = choice(self.vocab)
+                
+                print('Flashcard question. Press "enter" to flip card.')
+                if self.lang == 0:
+                    print(f'Word: "{self.word[self.lang]}"')
+                else:
+                    print(f'Definition: "{self.word[self.lang]}"')
+                self.response = input()
+                if self.response == 'stop':
+                    return
+                if self.response == 'skip':
+                    print('Skipped. Why would you skip a flashcard?\n')
+                    continue
+                if self.response == 'switch':
+                    self.lang = (self.lang + 1) % 2
+                    print('\n')
+                    continue
+                else:
+                    if self.lang == 0:
+                        print(f'Definition: "{self.word[(self.lang + 1) % 2]}"\n')
+                    else:
+                        print(f'Word: "{self.word[(self.lang + 1) % 2]}"\n')
 
     def start_test(self):
         pass
 
 vocab = Vocabulary(path)
-vocab.start_learn(True, True, False, False)
+vocab.start_learn(False, False, True, False)
