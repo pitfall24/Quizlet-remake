@@ -53,7 +53,7 @@ class Vocabulary:
         print('Word:', self.language[0], end = '\t')
         print('Definition:', self.language[1])
 
-    def start_flashcards(self, lang = None):
+    def start_ards(self, lang = None):
         if not lang:
             self.lang = None
         else:
@@ -166,6 +166,7 @@ class Vocabulary:
                         continue
                     if self.response != str(self.answer):
                         print(f'Incorrect. Answer was "{self.answer}"')
+                        continue
                 else:
                     self.totest = choice(self.vocab)
                     self.bait = choice(self.vocab)
@@ -188,6 +189,7 @@ class Vocabulary:
                         continue
                     if self.response != str(self.answer):
                         print(f'Incorrect. Answer was "{self.answer}"')
+                        continue
             
             if self.method == 'flashcards':
                 self.word = choice(self.vocab)
@@ -213,10 +215,13 @@ class Vocabulary:
                     else:
                         print(f'Word: "{self.word[(self.lang + 1) % 2]}"\n')
 
-    def start_test(self, mc, openr, tf, flashcards, num = None, lang = None):
-        self.input = {'mc':mc, 'openr':openr, 'tf':tf, 'flashcards':flashcards}
+    def start_test(self, mc, openr, tf, num = None, lang = None):
+        self.input = {'mc':mc, 'openr':openr, 'tf':tf}
         self.options = [name for name, value in self.input.items() if value]
         self.response = ''
+        self.wrong = 0
+        self.correct = 0
+        
         if not lang:
             self.lang = None
         else:
@@ -238,10 +243,9 @@ class Vocabulary:
                 continue
         print('Using ' + str(self.language[self.lang]) + '. Testing with ' + str(self.options) + ' for ' + str(self.num) + ' question(s). Type "skip" to skip a question. Type "stop" to exit the test.')
         for i in range(self.num):
+            sleep(1)
             self.method = choice(self.options)
             self.question_number = i + 1
-            self.wrong = 0
-            self.correct = 0
             
             if self.method == 'mc':
                 self.available = choices(self.vocab, k = 4)
@@ -252,6 +256,7 @@ class Vocabulary:
 
                 self.response = input()
                 if self.response == 'stop':
+                    self.wrong += 1
                     print(f'{self.wrong} wrong. {self.correct} correct.')
                     return
                 if self.response.upper() not in self.answers.keys() and self.response not in ['skip', 'stop', 'switch']:
@@ -263,11 +268,76 @@ class Vocabulary:
                     self.wrong += 1
                     continue
                 if self.answers[self.response.upper()] == self.totest:
-                    print('Correct.\n')
-                    
+                    self.correct += 1
                     continue
                 else:
-                    print(f'Incorrect. Correct answer was "{self.totest[self.lang]}"')
+                    self.wrong += 1
+            
+            if self.method == 'openr':
+                self.totest = choice(self.vocab)
+                print(f'Open response question. Type the definition of "{self.totest[self.lang]}"')
+                
+                self.response = input()
+                if self.response == 'stop':
+                    self.wrong += 1
+                    print(f'{self.wrong} wrong. {self.correct} correct.')
+                    return
+                if self.response == 'skip':
+                    print(f'Skipped.\n')
+                    self.wrong += 1
+                    continue
+                if self.response == self.totest[(self.lang + 1) % 2]:
+                    self.correct += 1
+                    continue
+                else:
+                    self.wrong += 1
+                    
+            if self.method == 'tf':
+                self.answer = randint(0, 1)
+                if self.answer:
+                    self.totest = choice(self.vocab)
+                    print(f'True or False question. Is "{self.totest[1]}" the definition of "{self.totest[0]}"? Answer 0 (False) or 1 (True).')
+                    
+                    self.response = input()
+                    if self.response == 'stop':
+                        self.wrong += 1
+                        print(f'{self.wrong} wrong. {self.correct} correct.')
+                        return
+                    if self.response == 'skip':
+                        print(f'Skipped.\n')
+                        self.wrong += 1
+                        continue
+                    if self.response == str(self.answer):
+                        self.correct += 1
+                        continue
+                    if self.response != str(self.answer):
+                        self.wrong += 1
+                        continue
+                else:
+                    self.totest = choice(self.vocab)
+                    self.bait = choice(self.vocab)
+                    while self.bait == self.totest:
+                        self.bait = choice(self.vocab)
+                    print(f'True or False question. Is "{self.totest[1]}" the definition of "{self.bait[0]}"? Answer 0 (False) or 1 (True).')
+                    
+                    self.response = input()
+                    if self.response == 'stop':
+                        self.wrong += 1
+                        print(f'{self.wrong} wrong. {self.correct} correct.')
+                        return
+                    if self.response == 'skip':
+                        print(f'Skipped.\n')
+                        self.wrong += 1
+                        continue
+                    if self.response == str(self.answer):
+                        self.correct += 1
+                        continue
+                    if self.response != str(self.answer):
+                        self.wrong += 1
+                        continue
+                    
+        print('wrong', self.wrong)
+        print('correct', self.correct)
 
 vocab = Vocabulary(path)
-vocab.start_test(True, False, False, False)
+vocab.start_test(True, True, True)
