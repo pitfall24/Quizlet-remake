@@ -334,8 +334,7 @@ class Vocabulary:
                         self.wrong += 1
                         continue
                     
-        print('wrong', self.wrong)
-        print('correct', self.correct)
+        print(f'{self.correct}/{self.num} questions correct.')
 
 path = input('What is your files name (Without ".txt")?  ')
 vocab = Vocabulary(path)
