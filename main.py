@@ -107,15 +107,18 @@ class Vocabulary:
                 print('\n'.join(str(letter) + '. ' + str(word[(self.lang + 1) % 2]) for letter, word in self.answers.items()))
 
                 self.response = input()
-                if self.response not in self.answers.keys() and self.response not in ['skip', 'stop', 'switch'] or self.response == 'stop':
+                if self.response == 'stop':
                     return
+                if self.response.upper() not in self.answers.keys() and self.response not in ['skip', 'stop', 'switch']:
+                    print('???')
+                    continue
                 if self.response == 'skip':
                     print(f'Skipped. Answer was "{self.totest[self.lang]}"')
                     continue
                 if self.response == 'switch':
                     self.lang = (self.lang + 1) % 2
                     continue
-                if self.answers[self.response] == self.totest:
+                if self.answers[self.response.upper()] == self.totest:
                     print('Correct')
                     continue
                 else:
