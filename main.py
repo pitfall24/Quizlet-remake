@@ -1,8 +1,6 @@
 from random import randint, choice, choices
 from time import sleep
 
-path = 'file'
-
 class Vocabulary:
     def __init__(self, path):
         self.path = path
@@ -53,7 +51,7 @@ class Vocabulary:
         print('Word:', self.language[0], end = '\t')
         print('Definition:', self.language[1])
 
-    def start_ards(self, lang = None):
+    def start_flashcards(self, lang = None):
         if not lang:
             self.lang = None
         else:
@@ -339,5 +337,19 @@ class Vocabulary:
         print('wrong', self.wrong)
         print('correct', self.correct)
 
+path = input('What is your files name (Without ".txt")')
 vocab = Vocabulary(path)
-vocab.start_test(True, True, True)
+
+activity = None
+while activity not in ['flashcards', 'learn', 'test']:
+    activity = input('Would you like to view "flashcards", "learn", or take a "test"?')
+    
+if activity == 'flashcards':
+    vocab.start_flashcards()
+
+if activity == 'learn':
+    types = input('Which of the following would you like to learn with? Separate with a comma (no space):\nMultiple choice (mc)\nOpen response (openr)\nTrue/False (tf)\nFlashcards (flashcards)').split(',')
+
+if activity == 'test':
+    # do even more shit
+    pass
