@@ -113,19 +113,39 @@ class Vocabulary:
                     print('???')
                     continue
                 if self.response == 'skip':
-                    print(f'Skipped. Answer was "{self.totest[self.lang]}"')
+                    print(f'Skipped. Answer was "{self.totest[self.lang]}"\n')
                     continue
                 if self.response == 'switch':
                     self.lang = (self.lang + 1) % 2
+                    print('\n')
                     continue
                 if self.answers[self.response.upper()] == self.totest:
-                    print('Correct')
+                    print('Correct.\n')
                     continue
                 else:
                     print(f'Incorrect. Correct answer was "{self.totest[self.lang]}"')
+            if self.method == 'openr':
+                self.totest = choice(self.vocab)
+                print(f'Open response question. Type the definition of "{self.totest[self.lang]}"')
+                
+                self.response = input()
+                if self.response == 'stop':
+                    return
+                if self.response == 'skip':
+                    print(f'Skipped. Answer was "{self.totest[(self.lang + 1) % 2]}"\n')
+                    continue
+                if self.response == 'switch':
+                    self.lang = (self.lang + 1) % 2
+                    print('\n')
+                    continue
+                if self.response == self.totest[(self.lang + 1) % 2]:
+                    print('Correct.\n')
+                    continue
+                else:
+                    print(f'Incorrect. Correct answer was "{self.totest[(self.lang + 1) % 2]}"\n')
 
     def start_test(self):
         pass
 
 vocab = Vocabulary(path)
-vocab.start_learn(True, False, False, False)
+vocab.start_learn(True, True, False, False)
