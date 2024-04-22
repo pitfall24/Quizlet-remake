@@ -1,5 +1,6 @@
 from random import randint, choice, choices
 from time import sleep
+from sys import argv
 
 class Vocabulary:
     def __init__(self, path):
@@ -336,16 +337,48 @@ class Vocabulary:
                     
         print(f'{self.correct}/{self.num} questions correct.')
 
-path = input('What is your files name (Without ".txt")?  ')
+if len(argv) > 1:
+    # using commandline arguments. in format:
+    # python3 main.py -path=vocab --learn
+    clargs = True
+    args = argv[1:]
+    
+    path = None
+    for arg in args:
+        if '-path' in arg:
+            path = arg.split('=')[-1]
+            args.remove(arg)
+            break
+    
+    if path is None:
+        raise ValueError('Invalid path, or none provided: -path=[path]')
+    
+    activity = None
+    types = [None]
+    
+    if len(args) != 1:
+        raise ValueError(f'Invalid number of arguments (expected 2, got {len(args) + 1}.')
+    
+    if '--' in args[0] and args[0].index('--') == 0:
+        activity = args[0][2:]
+    else:
+        raise ValueError(f'Invalid (activity?) argument {args[0]}')
+    
+else:
+    clargs = False
+    path = input('What is your files name (Without ".txt")?  ')
+
+    activity = None
+    types = [None]
+    while activity not in ['flashcards', 'learn', 'test']:
+        activity = input('Would you like to view "flashcards", "learn", or take a "test"?  ')
+
 vocab = Vocabulary(path)
 
-activity = None
-types = [None]
-while activity not in ['flashcards', 'learn', 'test']:
-    activity = input('Would you like to view "flashcards", "learn", or take a "test"?  ')
-    
 if activity == 'flashcards':
     vocab.start_flashcards()
+
+# if clargs==True adjust to allow specifying 'mc, openr, tf, flashcards' with them below
 
 if activity == 'learn':
     while not set(types).issubset(set(['mc', 'openr', 'tf', 'flashcards'])):
